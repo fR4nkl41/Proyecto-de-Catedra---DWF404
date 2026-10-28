@@ -1,0 +1,15 @@
+# Backend (Maven / IntelliJ)
+hotel-api/target/
+*.class
+*.log
+.idea/
+*.iml
+
+# Frontend (Node / Vite)
+hotel-frontend/node_modules/
+hotel-frontend/dist/
+
+# Sistema
+.DS_Store
+Thumbs.db
+.vscode/
