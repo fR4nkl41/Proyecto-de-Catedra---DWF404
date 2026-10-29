@@ -1,0 +1,2129 @@
+{
+  "info": {
+    "name": "API Hotel Añil - DWF404",
+    "description": "Colección de pruebas de la API REST del Sistema de Gestión de Reservas Hoteleras Añil.\n\n1. Ejecuta '1. Autenticación > Login ADMIN' (el token se guarda solo).\n2. Prueba los demás endpoints.\n\nLas peticiones marcadas con (400), (401), (403) o (409) muestran las validaciones y los mensajes de error.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080/api"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "reservaId",
+      "value": "6"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Autenticación",
+      "item": [
+        {
+          "name": "Login ADMIN",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@hotel.com\",\n  \"password\": \"Admin123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "Guarda el token automáticamente en la variable {{token}}."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "  pm.collectionVariables.set('token', pm.response.json().token);",
+                  "  console.log('Token guardado para ' + pm.response.json().usuario.rol);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login RECEPCIONISTA",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"recepcion@hotel.com\",\n  \"password\": \"Recep123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "  pm.collectionVariables.set('token', pm.response.json().token);",
+                  "  console.log('Token guardado para ' + pm.response.json().usuario.rol);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login HUÉSPED",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"carlos@mail.com\",\n  \"password\": \"Huesped123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "  pm.collectionVariables.set('token', pm.response.json().token);",
+                  "  console.log('Token guardado para ' + pm.response.json().usuario.rol);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login con contraseña incorrecta (401)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@hotel.com\",\n  \"password\": \"incorrecta1\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Registro de huésped",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/registro",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "registro"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"María López\",\n  \"email\": \"maria.lopez@mail.com\",\n  \"password\": \"Maria2026\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "  pm.collectionVariables.set('token', pm.response.json().token);",
+                  "  console.log('Token guardado para ' + pm.response.json().usuario.rol);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Mi perfil",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/perfil",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "perfil"
+              ]
+            }
+          }
+        }
+      ],
+      "description": "Ejecutar primero un login: el token se guarda solo y las demás peticiones lo usan."
+    },
+    {
+      "name": "2. Usuarios (ADMIN)",
+      "item": [
+        {
+          "name": "Listar usuarios",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/usuarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Listar por rol",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/usuarios?rol=HUESPED",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios"
+              ],
+              "query": [
+                {
+                  "key": "rol",
+                  "value": "HUESPED"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Obtener usuario",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/usuarios/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear recepcionista",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/usuarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Pedro Hernández\",\n  \"email\": \"pedro@hotel.com\",\n  \"password\": \"Pedro2026\",\n  \"rol\": \"RECEPCIONISTA\",\n  \"activo\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Actualizar usuario",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/usuarios/2",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios",
+                "2"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"María Rodríguez\",\n  \"email\": \"recepcion@hotel.com\",\n  \"password\": null,\n  \"rol\": \"RECEPCIONISTA\",\n  \"activo\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Desactivar usuario",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/usuarios/4/estado",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios",
+                "4",
+                "estado"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"activo\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Activar usuario",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/usuarios/4/estado",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios",
+                "4",
+                "estado"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"activo\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Eliminar usuario",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/usuarios/5",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios",
+                "5"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Hoteles",
+      "item": [
+        {
+          "name": "Listar hoteles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/hoteles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "hoteles"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Obtener hotel",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/hoteles/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "hoteles",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear hotel",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/hoteles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "hoteles"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Hotel Decameron\",\n  \"direccion\": \"Playa Salinitas km 75\",\n  \"ciudad\": \"Sonsonate\",\n  \"telefono\": \"2420-8000\",\n  \"email\": \"info@decameron.com\",\n  \"descripcion\": \"Hotel todo incluido de playa.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Crear hotel con datos inválidos (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/hoteles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "hoteles"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"\",\n  \"direccion\": \"Calle 1\",\n  \"ciudad\": \"San Salvador 123\",\n  \"telefono\": \"12345\",\n  \"email\": \"correo-malo\",\n  \"descripcion\": null\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Actualizar hotel",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/hoteles/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "hoteles",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Hotel Real Intercontinental\",\n  \"direccion\": \"Boulevard de Los Héroes y Av. Sisimiles\",\n  \"ciudad\": \"San Salvador\",\n  \"telefono\": \"2211-3333\",\n  \"email\": \"info@realinter.com\",\n  \"descripcion\": \"Hotel de negocios frente a Metrocentro.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Eliminar hotel con sucursales (409)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/hoteles/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "hoteles",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Sucursales",
+      "item": [
+        {
+          "name": "Listar sucursales",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/sucursales",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "sucursales"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Listar por hotel",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/sucursales?hotelId=3",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "sucursales"
+              ],
+              "query": [
+                {
+                  "key": "hotelId",
+                  "value": "3"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear sucursal",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/sucursales",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "sucursales"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hotelId\": 3,\n  \"nombre\": \"Sede Santa Ana\",\n  \"direccion\": \"Av. Independencia Sur #10\",\n  \"ciudad\": \"Santa Ana\",\n  \"telefono\": \"2440-1122\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Actualizar sucursal",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/sucursales/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "sucursales",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hotelId\": 1,\n  \"nombre\": \"Sede Los Héroes\",\n  \"direccion\": \"Boulevard de Los Héroes #1200\",\n  \"ciudad\": \"San Salvador\",\n  \"telefono\": \"2211-3334\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Eliminar sucursal",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/sucursales/5",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "sucursales",
+                "5"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Tipos de habitación",
+      "item": [
+        {
+          "name": "Listar tipos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/tipos-habitacion",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "tipos-habitacion"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear tipo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/tipos-habitacion",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "tipos-habitacion"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Familiar\",\n  \"descripcion\": \"Dos camas queen y sofá cama.\",\n  \"capacidadMaxima\": 5,\n  \"precioNoche\": 180.0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Crear tipo con tipo de dato incorrecto (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/tipos-habitacion",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "tipos-habitacion"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Prueba\",\n  \"descripcion\": null,\n  \"capacidadMaxima\": \"cinco\",\n  \"precioNoche\": 100\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Actualizar tarifa",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/tipos-habitacion/2",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "tipos-habitacion",
+                "2"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Doble\",\n  \"descripcion\": \"Habitación con cama queen o dos camas individuales.\",\n  \"capacidadMaxima\": 2,\n  \"precioNoche\": 125.0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Eliminar tipo",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/tipos-habitacion/4",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "tipos-habitacion",
+                "4"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Servicios",
+      "item": [
+        {
+          "name": "Listar servicios",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/servicios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "servicios"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Listar adicionales",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/servicios?adicional=true",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "servicios"
+              ],
+              "query": [
+                {
+                  "key": "adicional",
+                  "value": "true"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear servicio adicional",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/servicios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "servicios"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Spa\",\n  \"descripcion\": \"Sesión de masaje de 1 hora.\",\n  \"costo\": 40.0,\n  \"adicional\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Actualizar servicio",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/servicios/5",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "servicios",
+                "5"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Traslado al aeropuerto\",\n  \"descripcion\": \"Transporte desde o hacia el aeropuerto.\",\n  \"costo\": 25.0,\n  \"adicional\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Eliminar servicio",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/servicios/9",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "servicios",
+                "9"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Habitaciones",
+      "item": [
+        {
+          "name": "Buscar disponibles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/habitaciones/disponibles?ciudad=San Salvador&fechaEntrada=2026-12-10&fechaSalida=2026-12-13&huespedes=2",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "habitaciones",
+                "disponibles"
+              ],
+              "query": [
+                {
+                  "key": "ciudad",
+                  "value": "San Salvador"
+                },
+                {
+                  "key": "fechaEntrada",
+                  "value": "2026-12-10"
+                },
+                {
+                  "key": "fechaSalida",
+                  "value": "2026-12-13"
+                },
+                {
+                  "key": "huespedes",
+                  "value": "2"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Buscar con fecha pasada (400)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/habitaciones/disponibles?fechaEntrada=2020-01-01&fechaSalida=2020-01-05&huespedes=2",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "habitaciones",
+                "disponibles"
+              ],
+              "query": [
+                {
+                  "key": "fechaEntrada",
+                  "value": "2020-01-01"
+                },
+                {
+                  "key": "fechaSalida",
+                  "value": "2020-01-05"
+                },
+                {
+                  "key": "huespedes",
+                  "value": "2"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Listar habitaciones",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/habitaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "habitaciones"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Filtrar por sucursal y estado",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/habitaciones?sucursalId=3&estado=DISPONIBLE",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "habitaciones"
+              ],
+              "query": [
+                {
+                  "key": "sucursalId",
+                  "value": "3"
+                },
+                {
+                  "key": "estado",
+                  "value": "DISPONIBLE"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Obtener habitación",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/habitaciones/4",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "habitaciones",
+                "4"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear habitación",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/habitaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "habitaciones"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sucursalId\": 1,\n  \"tipoId\": 3,\n  \"numero\": \"301\",\n  \"piso\": 3,\n  \"estado\": \"DISPONIBLE\",\n  \"servicioIds\": [\n    1,\n    2,\n    3,\n    4\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Actualizar habitación",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/habitaciones/3",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "habitaciones",
+                "3"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sucursalId\": 1,\n  \"tipoId\": 1,\n  \"numero\": \"201\",\n  \"piso\": 2,\n  \"estado\": \"DISPONIBLE\",\n  \"servicioIds\": [\n    1,\n    2\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Cambiar estado a mantenimiento",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/habitaciones/7/estado",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "habitaciones",
+                "7",
+                "estado"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"MANTENIMIENTO\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Cambiar estado a disponible",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/habitaciones/7/estado",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "habitaciones",
+                "7",
+                "estado"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"DISPONIBLE\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Eliminar habitación",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/habitaciones/12",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "habitaciones",
+                "12"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "8. Huéspedes",
+      "item": [
+        {
+          "name": "Listar huéspedes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/huespedes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "huespedes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Buscar por documento",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/huespedes?buscar=01234567",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "huespedes"
+              ],
+              "query": [
+                {
+                  "key": "buscar",
+                  "value": "01234567"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Obtener huésped",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/huespedes/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "huespedes",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Registrar huésped",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/huespedes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "huespedes"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombreCompleto\": \"Sofía Ramírez\",\n  \"fechaNacimiento\": \"1998-03-21\",\n  \"tipoDocumento\": \"DUI\",\n  \"documento\": \"05678912-3\",\n  \"telefono\": \"7012-3456\",\n  \"email\": \"sofia@mail.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Registrar menor de edad / DUI inválido (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/huespedes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "huespedes"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombreCompleto\": \"Niño 123\",\n  \"fechaNacimiento\": \"2015-01-01\",\n  \"tipoDocumento\": \"DUI\",\n  \"documento\": \"12345\",\n  \"telefono\": \"5555\",\n  \"email\": \"x\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Actualizar huésped",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/huespedes/3",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "huespedes",
+                "3"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombreCompleto\": \"Luis Martínez\",\n  \"fechaNacimiento\": \"1987-02-20\",\n  \"tipoDocumento\": \"DUI\",\n  \"documento\": \"03456789-1\",\n  \"telefono\": \"6012-3456\",\n  \"email\": \"luis.martinez@mail.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Mi perfil (HUÉSPED)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/huespedes/mi-perfil",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "huespedes",
+                "mi-perfil"
+              ]
+            },
+            "description": "Requiere iniciar sesión como huésped."
+          }
+        },
+        {
+          "name": "Eliminar huésped",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/huespedes/5",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "huespedes",
+                "5"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "9. Reservas",
+      "item": [
+        {
+          "name": "Listar reservas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reservas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reservas"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Listar por estado",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reservas?estado=PENDIENTE",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reservas"
+              ],
+              "query": [
+                {
+                  "key": "estado",
+                  "value": "PENDIENTE"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear reserva",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reservas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reservas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"habitacionId\": 7,\n  \"fechaEntrada\": \"2026-12-10\",\n  \"fechaSalida\": \"2026-12-13\",\n  \"numeroHuespedes\": 1,\n  \"huesped\": {\n    \"nombreCompleto\": \"Carlos Pérez\",\n    \"fechaNacimiento\": \"1990-05-15\",\n    \"tipoDocumento\": \"DUI\",\n    \"documento\": \"01234567-8\",\n    \"telefono\": \"7777-8888\",\n    \"email\": \"carlos@mail.com\"\n  },\n  \"servicios\": [\n    {\n      \"servicioId\": 5,\n      \"cantidad\": 1\n    }\n  ],\n  \"solicitudesEspeciales\": \"Habitación silenciosa\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Guarda el ID en {{reservaId}}."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) { pm.collectionVariables.set('reservaId', pm.response.json().id); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Crear reserva con salida antes de la entrada (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reservas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reservas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"habitacionId\": 7,\n  \"fechaEntrada\": \"2026-12-15\",\n  \"fechaSalida\": \"2026-12-12\",\n  \"numeroHuespedes\": 1,\n  \"huesped\": {\n    \"nombreCompleto\": \"Carlos Pérez\",\n    \"fechaNacimiento\": \"1990-05-15\",\n    \"tipoDocumento\": \"DUI\",\n    \"documento\": \"01234567-8\",\n    \"telefono\": \"7777-8888\",\n    \"email\": \"carlos@mail.com\"\n  },\n  \"servicios\": [\n    {\n      \"servicioId\": 5,\n      \"cantidad\": 1\n    }\n  ],\n  \"solicitudesEspeciales\": \"Habitación silenciosa\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Crear reserva en fechas ocupadas (409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reservas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reservas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"habitacionId\": 7,\n  \"fechaEntrada\": \"2026-12-10\",\n  \"fechaSalida\": \"2026-12-13\",\n  \"numeroHuespedes\": 1,\n  \"huesped\": {\n    \"nombreCompleto\": \"Carlos Pérez\",\n    \"fechaNacimiento\": \"1990-05-15\",\n    \"tipoDocumento\": \"DUI\",\n    \"documento\": \"01234567-8\",\n    \"telefono\": \"7777-8888\",\n    \"email\": \"carlos@mail.com\"\n  },\n  \"servicios\": [\n    {\n      \"servicioId\": 5,\n      \"cantidad\": 1\n    }\n  ],\n  \"solicitudesEspeciales\": \"Habitación silenciosa\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Ejecutar después de 'Crear reserva' con la misma habitación y fechas."
+          }
+        },
+        {
+          "name": "Obtener reserva",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reservas/{{reservaId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reservas",
+                "{{reservaId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Modificar reserva (solo PENDIENTE)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reservas/{{reservaId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reservas",
+                "{{reservaId}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"habitacionId\": 7,\n  \"fechaEntrada\": \"2026-12-10\",\n  \"fechaSalida\": \"2026-12-14\",\n  \"numeroHuespedes\": 1,\n  \"huesped\": {\n    \"nombreCompleto\": \"Carlos Pérez\",\n    \"fechaNacimiento\": \"1990-05-15\",\n    \"tipoDocumento\": \"DUI\",\n    \"documento\": \"01234567-8\",\n    \"telefono\": \"7777-8888\",\n    \"email\": \"carlos@mail.com\"\n  },\n  \"servicios\": [\n    {\n      \"servicioId\": 5,\n      \"cantidad\": 2\n    },\n    {\n      \"servicioId\": 6,\n      \"cantidad\": 1\n    }\n  ],\n  \"solicitudesEspeciales\": \"Habitación silenciosa\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Simular cancelación",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reservas/{{reservaId}}/cancelacion/simular",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reservas",
+                "{{reservaId}}",
+                "cancelacion",
+                "simular"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Cancelar reserva",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reservas/{{reservaId}}/cancelar",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reservas",
+                "{{reservaId}}",
+                "cancelar"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"motivo\": \"Cambio de planes de viaje\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Check-in (reserva confirmada que llega hoy)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reservas/1/check-in",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reservas",
+                "1",
+                "check-in"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Check-out (reserva en curso)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reservas/3/check-out",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reservas",
+                "3",
+                "check-out"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Historial de cancelaciones",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reservas/cancelaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reservas",
+                "cancelaciones"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar reserva (ADMIN)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reservas/{{reservaId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reservas",
+                "{{reservaId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "10. Pagos",
+      "item": [
+        {
+          "name": "Pagar con tarjeta",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pagos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pagos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reservaId\": \"{{reservaId}}\",\n  \"metodoPago\": \"TARJETA\",\n  \"numeroTarjeta\": \"4242424242424242\",\n  \"titular\": \"Carlos Perez\",\n  \"vencimiento\": \"12/28\",\n  \"cvv\": \"123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Pagar con tarjeta inválida (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pagos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pagos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reservaId\": 2,\n  \"metodoPago\": \"TARJETA\",\n  \"numeroTarjeta\": \"1234567890123456\",\n  \"titular\": \"Ana Gomez\",\n  \"vencimiento\": \"01/20\",\n  \"cvv\": \"12\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Pagar con transferencia",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pagos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pagos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reservaId\": 2,\n  \"metodoPago\": \"TRANSFERENCIA\",\n  \"referenciaTransferencia\": \"TRF-123456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Registrar pago en efectivo (personal)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pagos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pagos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reservaId\": 2,\n  \"metodoPago\": \"EFECTIVO\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Listar pagos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pagos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pagos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Pago de una reserva",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pagos/reserva/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pagos",
+                "reserva",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "11. Reclamos",
+      "item": [
+        {
+          "name": "Listar reclamos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reclamos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reclamos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear reclamo (personal)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reclamos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reclamos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"huespedId\": 2,\n  \"reservaId\": 2,\n  \"asunto\": \"Cambio de habitación\",\n  \"descripcion\": \"La huésped solicita una habitación en un piso más alto.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Editar reclamo",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reclamos/2",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reclamos",
+                "2"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reservaId\": 1,\n  \"asunto\": \"Solicitud de cuna\",\n  \"descripcion\": \"Quisiera saber si es posible agregar una cuna para bebé en la suite.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Responder reclamo",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reclamos/2/respuesta",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reclamos",
+                "2",
+                "respuesta"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"RESUELTO\",\n  \"respuesta\": \"Con gusto colocaremos una cuna en su suite.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Eliminar reclamo",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reclamos/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reclamos",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "12. Estadísticas",
+      "item": [
+        {
+          "name": "Panel de control",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/estadisticas/dashboard",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "estadisticas",
+                "dashboard"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "13. Seguridad",
+      "item": [
+        {
+          "name": "Sin token (401)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/hoteles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "hoteles"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Huésped intenta ver usuarios (403)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/usuarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios"
+              ]
+            },
+            "description": "Ejecutar después de 'Login HUÉSPED'."
+          }
+        }
+      ],
+      "description": "Pruebas de autenticación y autorización por rol."
+    }
+  ]
+}
